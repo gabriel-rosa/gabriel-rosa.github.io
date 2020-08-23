@@ -1,8 +1,7 @@
 ---
 layout: post
 title: Past projects
-categories: [projects]
-- blog
+tags: [events, meetup]
 ---
 
 * TOC
