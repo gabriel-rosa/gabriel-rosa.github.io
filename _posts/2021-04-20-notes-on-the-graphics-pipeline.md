@@ -47,6 +47,8 @@ One important thing to note here is that the fact that pixels are sent to the ne
 
 Like the Vertex Shader, this stage receives a block of data, which is then divided into smaller batches that "fit" in a shader core. This happens because in hardware, each core can run instructions on many points of data at the same time. If, say, the core can run 16 threads, then 4 quads (each with 4 points of data, ie. pixels) can be processed at once. For all of the pixels in these quads the code of the fragmenet shader will execute with the exact same instructions being run at each clock cycle (in lockstep). This can become problematic when the pixel shader has branches, since if a single thread enters a branch, the others will have to stall until they can continue execution, so developers have to manage this efficiently.
 
+![Threads stalling due to branching]({{site.baseurl}}/img/branches.png)
+
 When quad overdraw happens, you can have 75% of threads shading pixels that will be discarded, which is a massive waste of resources. Then why not just process each pixel individually? The reason is derivatives. Texture samplers rely on derivatives to select mip levels and perform filtering. If every pixel is submitted with its neighbors, the derivatives can be easily calculated.
 
 After the fragment shader is executed on the quads, the output is also placed into quads and sent to the next stage.
