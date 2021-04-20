@@ -19,11 +19,11 @@ After the draw command is issued, the first stage in the pipeline is the Input A
 
 #### Vertex Shader
 
-This is the first programmable stage in the pipeline. It receives a block of vertices and executes a shader program that is usually responsible for applying per-vertex operations, such as the transformation from model-space to clip-space on each vertex. 
+This is the first programmable stage in the pipeline. It receives a block of vertices and executes a shader program that is usually responsible for applying per-vertex operations, such as the transformation from object space to clip space on each vertex. 
 
 ![Vertex transformations]({{site.baseurl}}/img/transformations.png)
 
-A model's vertices exist in a space called model-space, where vertex positions are defined in relation to the model's origin. In order to transform them to clip-space, matrix multiplications are used. First the vertices are multiplied by a model matrix to get their world coordinates. Then they're multiplied by a view matrix, which transforms them so they're viewed from a camera's perspective. Finally a projection matrix applies either a perspective or orthogonal transformation, projecting the vertices onto a 2D plane. This projection brings them to the so called clip-space, which, as the name suggests, is the space where primitives will be clipped against the view frustum (the observable space from the camera's point of view) in the next stage of the pipeline.
+An object's vertices exist in a space called object space, where vertex positions are defined in relation to the object's origin. In order to transform them to clip space, matrix multiplications are used. First the vertices are multiplied by a model matrix to get their world coordinates. Then they're multiplied by a view matrix, which transforms them so they're viewed from a camera's perspective. Finally a projection matrix applies either a perspective or orthogonal transformation, projecting the vertices onto a 2D plane. This projection brings them to the so called clip space, which, as the name suggests, is the space where primitives will be clipped against the view frustum (the observable space from the camera's point of view) in the next stage of the pipeline.
 
 Besides transformations, in the Vertex Shader stage additional attributes can be attached to each vertex. These attributes will be interpolated and provided to the Fragment Shader.
 
