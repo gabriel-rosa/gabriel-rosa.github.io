@@ -37,7 +37,7 @@ The final step is to apply triangle culling. The signed area of each triangle is
 
 Rasterization is responsible for taking vector equations derived from a primitive's vertices and deducing which pixels correspond to the primitive. Usually it's implemented in a coarse and a fine stage. In the coarse stage, the screen is divided into large blocks which are tested to see if they intersect with the primitive (this is called a coverage test). Coarse blocks that intersect it are then forwarded to the fine stage, where they're divided into smaller blocks, which are then tested for coverage at the pixel level. The smaller blocks are separated into quads (blocks of 2x2 pixels), and quads which have at least one intersecting pixel are sent to the next stage (in a batch, as is to be expected) after their attributes are interpolated. 
 
-![Rasterization example with 2x2 quads]({{site.baseurl}}/img/quads.png)
+![Rasterization example with 2x2 quads]({{site.baseurl}}/img/rasterization.png)
 
 When multisample antialiasing is enabled, instead of testing a single pixel the corresponding number of subpixels are tested. Only the actual pixel will be shaded in the next stage, but the ratio of subpixels that are covered by the primitive will determine how the pixel color will be blended in the final image, in a step called msaa resolve. For example, if the background is black and we draw a white pixel that has only 2 covered subpixels, the resolved pixel color half black and half white, ie. gray.
 
