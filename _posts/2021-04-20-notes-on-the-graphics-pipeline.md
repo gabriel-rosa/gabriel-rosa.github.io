@@ -1,5 +1,5 @@
 ---
-published: true
+published: false
 ---
 Computer Graphics is a pretty interesting field. For instance, you can make a state of the art offline renderer without ever touching graphics hardware. When it comes to real-time rendering though, there's no way around it, you have to use a GPU. And if you want to get good performance you have to use it well, and that begins with understanding the graphics pipeline.
 
