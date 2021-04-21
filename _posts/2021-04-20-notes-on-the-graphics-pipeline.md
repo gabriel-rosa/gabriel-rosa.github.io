@@ -64,5 +64,4 @@ And that's it. That's the end the journey of the data, from vertices and indices
 #### References
 
 [Fabian Giesen - A trip through the graphics pipeline](https://fgiesen.wordpress.com/2011/07/09/a-trip-through-the-graphics-pipeline-2011-index/)
-
 [Lou Kramer - All the pipelines - Journey through the GPU](https://gpuopen.com/wp-content/uploads/2021/01/AMD_Graphics_pipeline_GIC2020.pdf)
