@@ -47,7 +47,9 @@ One important thing to note here is that the fact that pixels are sent to the ne
 
 #### Fragment Shader
 
-Like the Vertex Shader, this stage receives a block of data, which is then divided into smaller batches that "fit" in a shader core. This is done because in hardware each core can run instructions on many points of data at the same time. If, say, the core can run 16 threads per cycle, then 4 quads (each with 4 points of data, which in this case will be pixels) can be processed at once. For all of the pixels in these quads the code of the fragment shader will execute with the exact same instructions being run at each clock cycle (in lockstep). This can become problematic when the pixel shader has branches, since if a single thread enters a branch, the others will have to stall until they can continue execution, so developers have to manage this efficiently.
+This is another programmable stage in the pipeline. It receives a block of pixels with their interpolated position and attributes, and executes a shader program that is responsible for applying per-pixel operations (such as lighting), outputting a shaded pixel. 
+
+Like the Vertex Shader, this stage receives a block of data which is then divided into smaller batches that "fit" in a shader core. This is done because in hardware each core can run instructions on many points of data at the same time. If, say, the core can run 16 threads per cycle, then 4 quads (each with 4 points of data, which in this case will be pixels) can be processed at once. For all of the pixels in these quads the code of the fragment shader will execute with the exact same instructions being run at each clock cycle (in lockstep). This can become problematic when the pixel shader has branches, since if a single thread enters a branch, the others will have to stall until they can continue execution, so developers have to manage this efficiently.
 
 ![Threads stalling due to branching]({{site.baseurl}}/img/branches.png)
 
