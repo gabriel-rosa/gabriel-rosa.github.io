@@ -59,7 +59,7 @@ After the Fragment Shader is executed, the shaded quads are sent to the final st
 
 #### Output Merger
 
-The Output Merger stage is where the final pixel color is generated according to pipeline state, the quads received from the Fragment Shader, the contents of bound render targets as well as depth/stencil buffers. First depth and stencil tests are performed to see if the incoming pixels should be discarded. If they pass the tests, the color of each pixel is then blended with the contents of the render target, performing msaa resolve if necessary. The final pixel is then written back to the render target and compression is applied.
+The Output Merger stage is where the final pixel color is generated according to pipeline state, the quads received from the Fragment Shader, the contents of bound render targets as well as depth/stencil buffers. First depth and stencil tests are performed to see if the incoming pixels should be discarded. If they pass the tests, the color of each pixel is then blended with the contents of the render target, performing MSAA resolve if necessary. The final pixel is then written back to the render target and compression is applied.
 
 And that's it. That's the end the journey of the data, from vertices and indices to shaded pixels which can now be presented to the screen. Somethings we didn't cover are Tesselation and Geometry Shaders, which sit between the Vertex Shader and the Primitive Assembly stage, and the Compute Pipeline, which is way simpler having only a single programmable stage. If you're interested in learning more, check out the resources below.
 
