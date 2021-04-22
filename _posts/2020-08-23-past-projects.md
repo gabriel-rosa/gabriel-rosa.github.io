@@ -1,15 +1,18 @@
 ---
 layout: post
 title: Past projects
-tags: [events, meetup]
+tags:
+  - events
+  - meetup
+published: true
 ---
 
 * TOC
 {:toc}
 
-As a self taught graphics programmer, tutorials and personal projects were some of the best learning tools I had access to, especially personal projects. They are a fun and engaging way to learn, and at the end of the day you have something cool you can show other people. 
+As a self taught graphics programmer, tutorials and personal projects were some of the best learning tools I had access to. They are a fun and engaging way to learn, and at the end of the day you have something cool you can show other people. 
 
-Here I've collected some of the personal projects I've developed ~~and abandoned~~ over the years.
+Here I've collected some of the personal projects I've developed over the years.
 
 ## 2014
 
@@ -24,12 +27,12 @@ The name says it all, it's a very basic renderer using checkboxes as pixels. It 
 
 ## 2015
 
-This year I started getting more into computer graphics (again, as a hobby).
+This year I started getting more into computer graphics.
 
 #### Raymarched Terrain
 ![Raymarched Terrain](/img/raymarched_terrain.jpg){: .img-resized :}
 
-After reading some of [Inigo Quilez's articles](https://www.iquilezles.org/www/index.htm), I had to try my hand at implementing something similar. I don't think [Shadertoy](https://www.shadertoy.com/) was around during this time, but it would be perfect for this project.
+After reading some of [Inigo Quilez's articles](https://www.iquilezles.org/www/index.htm), I had to try my hand at implementing something similar. I didn't know [Shadertoy](https://www.shadertoy.com/) was around during this time, but it would be perfect for this project.
 
 The terrain rendering is done inside a fragment shader, which marches a ray from each pixel until they intersect (or not) a procedurally generated terrain.
 
@@ -58,7 +61,7 @@ After reading a post on stackoverflow about solving mazes with Breadth-First Sea
 
 ## 2016
 
-During this time I still thought I was gonna work as an engineer after graduating. I'm glad I was wrong!
+Back then I still had no intention of pursuing computer graphics as a profession.
 
 #### Endless Runner
 ![Endless Runner](/img/endless_runner.gif){: .img-resized :}
@@ -74,7 +77,7 @@ This is far from a finished project (you can't even add new filters, having to u
 
 ## 2018
 
-Nearing the end of my graduation, I started to focus on job searching and found that there **are** companies where I live that deal with computer graphics.
+Nearing the end of my graduation, I started to focus on job searching and found that computer graphics is actually a viable field of work where I live.
 
 #### Tinyrenderer
 ![Tiny Renderer](/img/tinyrenderer.jpg){: .img-resized :}
@@ -82,6 +85,6 @@ Nearing the end of my graduation, I started to focus on job searching and found 
 [](/tinyrenderer){: .center-links .icon-link .fa .fa-eye .fa-2x :}
 [](https://github.com/gabriel-rosa/tinyrenderer){: .fa .icon-link .fa-github .fa-2x :}
 
-After seeing an open position at [Audaces](https://www.audaces.com), I decided to take on a rendering-focused project to put on my resume before applying. Luckily I came across the excellent [tutorial series on creating a software renderer](https://github.com/ssloy/tinyrenderer) by ssloy.
+After seeing an open position at [Audaces](https://www.audaces.com), I decided to take on a rendering-focused project to put on my resume before applying. Luckily I came across the excellent [tutorial series on creating a software rasterizer](https://github.com/ssloy/tinyrenderer) by ssloy.
 
-Following the tutorial series, I made my own implementation in javascript, so the render could run on the browser. It features line and triangle rasterization, texture mapping, a depth buffer, normal mapping, shadow mapping and SSAO! Rendering of course is really slow, and for that reason only a single frame is rendered.
+Following the tutorial series, I made my own implementation in javascript, so the renderer could run on the browser. It features line and triangle rasterization, texture mapping, a depth buffer, normal mapping, shadow mapping and SSAO. Rendering of course is really slow, and for that reason only a single frame is rendered.
