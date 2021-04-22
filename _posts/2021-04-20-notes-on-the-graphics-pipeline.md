@@ -41,7 +41,7 @@ Rasterization is responsible for taking vector equations derived from a primitiv
 
 ![Rasterization example with 2x2 quads]({{site.baseurl}}/img/rasterization.png)
 
-When multisample antialiasing is enabled, instead of testing a single pixel the corresponding number of subpixels are tested. Only the actual pixel will be shaded in the next stage, but the ratio of subpixels that are covered by the primitive will determine how the pixel color will be blended in the final image, in a step called MSAA resolve. For example, if the background is black and we draw a white pixel that has only 2 covered subpixels, the resolved pixel color half black and half white, ie. gray.
+When multisample antialiasing is enabled, instead of testing a single pixel the corresponding number of subpixels are tested. Only the actual pixel will be shaded in the next stage, but the ratio of subpixels that are covered by the primitive will determine how the pixel color will be blended in the final image, in a step called MSAA resolve. For example if we use 4x MSAA, if the background is black and we draw a white pixel that has only 2 covered subpixels (out of 4), the resolved pixel color will be 50% black and 50% white, ie. gray.
 
 One important thing to note here is that the fact that pixels are sent to the next stage in quads means that we may end up wasting resources. For example, if only a single pixel in a quad is covered by a primitive, we'll still have to process a full quad, but 75% of the work will be discarded. This is called quad overdraw, and happens mostly with very small or very thin triangles, which might end up impacting performance.
 
