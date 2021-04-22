@@ -51,7 +51,7 @@ Like the Vertex Shader, this stage receives a block of data, which is then divid
 
 ![Threads stalling due to branching]({{site.baseurl}}/img/branches.png)
 
-When quad overdraw happens, you can have 75% of threads shading pixels that will be discarded, which is a massive waste of resources. Why not just process each pixel individually then? The reason is derivatives. Texture samplers rely on derivatives to select mip levels and perform filtering. If every pixel is placed in a quad along with its neighbors, the derivatives can be easily calculated.
+When quad overdraw happens, you can have 75% of threads shading pixels that will be discarded, which is a massive waste of resources. Why not just process each pixel individually then? The reason is derivatives, which are used by texture samplers to select mip levels and perform filtering. If every pixel is placed in a quad along with its neighbors, the derivatives can be easily calculated.
 
 After the Fragment Shader is executed, the shaded quads are sent to the final stage of the pipeline.
 
