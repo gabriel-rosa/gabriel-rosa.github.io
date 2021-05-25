@@ -1,9 +1,6 @@
 ---
 published: true
 ---
-
-$$a^2 + b^2 = c^2$$
-
 Computer Graphics is a pretty interesting field. For instance, you can make a state of the art offline renderer without ever touching graphics hardware. When it comes to real-time rendering though, there's no way around it, you have to use a GPU. And if you want to get good performance you have to use it well, and that begins with understanding the graphics pipeline.
 
 The graphics pipeline is the name given to the stages data goes through in a graphics system in order to produce a rendered image. Back in the early days of accelerated graphics these stages worked like black boxes with a few knobs and switches to control their behavior, but over time some stages became programmable through small programs called shaders which give developers more control over the rendering process. Modern GPUs have very generic "shader cores" which can efficiently execute work from different programmable stages, so what distinguishes these stages is mostly the data that is being processed. Its up to the pipeline then to make sure data goes in and out of each stage as efficiently as possible.
