@@ -22,9 +22,7 @@ $$O_0 = \alpha_0 C_0 + (1 - \alpha_0) B_r$$
 
 This result is then placed in the backbuffer. Rendering a second object ($$C_1$$, $$\alpha_1$$) will result in it being blended with the previous result
 
-$$O_1 = \alpha_1 C_1 + (1- \alpha_1) O_0$$
-
-$$O_1 = \alpha_1 C_1 + (1- \alpha_1) (\alpha_0 C_0 + (1 - \alpha_0) B_r)$$
+$$O_1 = \alpha_1 C_1 + (1- \alpha_1) \cantelto{\alpha_0 C_0 + (1 - \alpha_0) B_r}{O_0}$$
 
 $$O_1 = [\alpha_1 C_1 + (1- \alpha_1) (\alpha_0 C_0)] + [(1- \alpha_1) (1 - \alpha_0)] B_r$$
 
@@ -40,15 +38,11 @@ where $$X_n$$ is a constant term and
 
 $$K_n = (1 - \alpha_n) (1 - \alpha_{n-1}) ... (1 - \alpha_0)$$
 
-Since each rendering assumes the destination color is opaque, every alpha is discarded but the last one ($$\alpha_n$$), which is written to the backbuffer along with color $$O_n = X_n + K_n * B_r$$. 
+Since each rendering assumes the destination color is opaque, every alpha is discarded but the last one ($$\alpha_n$$), which is written to the backbuffer along with color $$O_n = X_n + K_n B_r$$. 
 
 In the case we're investigating where the background is fully transparent we have $$B_r = 0$$, so the final color is $$O_n = X_n$$. In order to present the backbuffer to the monitor we "blend" it with the default state which is black, so the presented color is
 
-$$O_r = \alpha_n O_n$$
-
-$$O_r = \alpha_n (X_n + K_n B_r)$$
-
-$$O_r = \alpha_n X_n$$
+$$O_r = \alpha_n O_n = \alpha_n X_n$$
 
 Lets get back to the saved image. We now know that the colors that get exported are $$C_i = O_n = X_n$$ with alpha $$a_i = a_n$$, which we can substitute in the equation for the blended image color we set aside before to get
 
@@ -60,7 +54,7 @@ $$O_i = O_r$$
 
 $$a_i C_i + (1 - \alpha_i) B = \alpha_n (X_n + K_n B)$$
 
-$$C_i = X_n \frac{\alpha_n}{\alpha_i} + \frac{B}{\alpha_i} (\alpha_n * K_n + \alpha_i - 1)$$
+$$C_i = X_n \frac{\alpha_n}{\alpha_i} + \frac{B}{\alpha_i} (\alpha_n K_n + \alpha_i - 1)$$
 
 Since we can't solve the equation with two unknowns ($$C_i$$ and $$\alpha_i$$), we set $$\alpha_i$$ in a way that simplifies the equation
 
