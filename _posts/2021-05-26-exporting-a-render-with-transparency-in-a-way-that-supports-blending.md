@@ -7,7 +7,7 @@ Recently I ran into an interesting issue at work which led to a pretty neat solu
 
 #### Alpha blending
 
-To understand and correct this behavior I decided to look at how the colors were produced both for the renderer and for the exported image. First lets remind ourselves how alpha blending works. If we want to blend a transparent color (called the source color) with a background color (called the destination) which is assumed to be opaque, we first define an $$\alpha$$ parameter that determines how transparent the source is ($$\alpha = 0$$ is fully transparent, $$\alpha = 1$$ is fully opaque). Then we use the so called over operator to compute the final image (its a linear interpolation):
+To understand and correct this behavior I decided to look at how the colors were produced both for the renderer and for the exported image. First lets remind ourselves how alpha blending works. If we want to blend a transparent color (called the source color) with a background color (called the destination) which is assumed to be opaque, we first define an $$\alpha$$ parameter that determines how transparent the source is ($$\alpha = 0$$ is fully transparent, $$\alpha = 1$$ is fully opaque). Then we use the so called over operator to compute the final image (basically a linear interpolation):
 
 $$O = \alpha C_s + (1 - \alpha) C_d$$
 
@@ -19,7 +19,7 @@ $$O_i = \alpha_i C_i + (1 - \alpha_i) B_i$$
 
 ![Incorrectly blended image]({{site.baseurl}}/img/problem.png)
 
-#### Computing the color of the render
+#### Computing the color of the rendered scene
 
 Lets take note of this result and see how our renderer arrives at $$C_i$$ and $$\alpha_i$$. Typically in a scene with overlapping objects with different levels of transparency, objects are rendered back to front and blended with the over operator. So if we have a background of color $$B_r$$ and we render the first transparent object ($$C_0$$, $$\alpha_0$$) over it, the resulting color will be
 
@@ -55,11 +55,13 @@ Lets get back to the saved image. We now know that the colors that get exported 
 
 $$O_i = a_n X_n + (1 - a_n) B_n$$
 
-As we can see, for any value of $$B_n$$ other than $$0$$ we will have $$O_i \neq O_r$$. In order to fix this we have to find a different $$C_i$$ and $$a_i$$ such that blending the image with any color will give the same result as rendering the objects over the same background color. So we begin by setting both background colors to an arbitrary value $$B_n = B_r = B$$. Then we make the image color equal the rendered color
+As we can see, for any value of $$B_n$$ other than $$0$$ we will have $$O_i \neq O_r$$, explaining why the exported image only looks correct when placed over a black background. In order to fix this we have to find a different $$C_i$$ and $$a_i$$ such that blending the image with any color will give the same result as rendering the objects over the same background color. So we begin by setting both background colors to an arbitrary value $$B_n = B_r = B$$. Then we make the image color equal the rendered color
 
 $$O_i = O_r$$
 
 $$a_i C_i + (1 - \alpha_i) B = \alpha_n (X_n + K_n B)$$
+
+which we can solve for $$C_i$$
 
 $$C_i = X_n \frac{\alpha_n}{\alpha_i} + \frac{B}{\alpha_i} (\alpha_n K_n + \alpha_i - 1)$$
 
