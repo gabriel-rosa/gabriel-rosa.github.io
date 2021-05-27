@@ -38,7 +38,7 @@ $$O_1 = X_1 + K_1 B_r$$
 
 ![Multiple layers being blended]({{site.baseurl}}/img/alpha_blending.png)
 
-If we repeat this N times we'll get 
+If we repeat this $$n$$ times we'll get 
 
 $$O_n = X_n + K_n B_r$$
 
