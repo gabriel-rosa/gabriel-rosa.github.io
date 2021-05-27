@@ -95,7 +95,7 @@ $$K = O_{B1} - O_{B0}$$
 
 And now we're done. Rendering the scene twice might be expensive in some cases, but it simplifies things so much that I still chose to go with this solution.
 
-#### Step-by-step of the fix
+#### Step-by-step solution
 
 To summarize, in order to save an image of a render with transparency in a way that it can still be blended afterwards we do the following:
 
