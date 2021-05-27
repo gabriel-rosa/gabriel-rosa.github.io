@@ -1,7 +1,7 @@
 ---
 published: true
 ---
-Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with was capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There was an issue with this approach though: if the background was fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes were semi-transparent, the resulting image would not look correct if it was later blended with anything other than a black layer. If we embedded the image in a document with a white background, for instance, the result would look very strange.
+Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with is capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There is an issue with this approach though: if the background is fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes are semi-transparent, the resulting image will not look correct if it is later blended with anything other than a black layer. If we embed the image in a document with a white background, for instance, the result will look very strange.
 
 ![Alpha blending with the over operator]({{site.baseurl}}/img/over_operator.png)
 
@@ -13,7 +13,7 @@ $$O = \alpha C_s + (1 - \alpha) C_d$$
 
 #### Computing the color of the blended image
 
-Now that we know how blending works, lets see how the color of the (incorrectly) blended image is computed. Say our renderer exported an image with color $$C_i$$ and alpha $$\alpha_i$$, if we blend the image with a background layer of color $$B_i$$ the result is
+With this in mind, lets see how the color of the (incorrectly) blended image is computed. Say our renderer exported an image with color $$C_i$$ and alpha $$\alpha_i$$, if we blend the image with a background layer of color $$B_i$$ the result is
 
 $$O_i = \alpha_i C_i + (1 - \alpha_i) B_i$$
 
@@ -21,7 +21,7 @@ $$O_i = \alpha_i C_i + (1 - \alpha_i) B_i$$
 
 #### Computing the color of the render
 
-Lets leave this result aside for now and see how our renderer arrives at $$C_i$$ and $$\alpha_i$$. Typically in a scene with overlapping objects with different levels of transparency, objects are rendered back to front and blended with the over operator. So if we have a background of color $$B_r$$ and we render the first transparent object ($$C_0$$, $$\alpha_0$$) over it, the resulting color will be
+Lets take note of this result and see how our renderer arrives at $$C_i$$ and $$\alpha_i$$. Typically in a scene with overlapping objects with different levels of transparency, objects are rendered back to front and blended with the over operator. So if we have a background of color $$B_r$$ and we render the first transparent object ($$C_0$$, $$\alpha_0$$) over it, the resulting color will be
 
 $$O_0 = \alpha_0 C_0 + (1 - \alpha_0) B_r$$
 
@@ -43,7 +43,7 @@ where $$X_n$$ is a constant term and
 
 $$K_n = (1 - \alpha_n) (1 - \alpha_{n-1}) ... (1 - \alpha_0)$$
 
-Since each rendering assumes the destination color is opaque, every alpha is discarded but the last one ($$\alpha_n$$), which is written to the backbuffer along with color $$O_n$$. 
+Since each time we assume the destination color is opaque, every alpha is discarded but the last one ($$\alpha_n$$), which is written to the backbuffer along with color $$O_n$$. 
 
 In the case we're investigating where the background is fully transparent we have $$B_r = 0$$, so the final color is $$O_n  = X_n + K_n \cancelto{0}{B_r} = X_n$$. In order to present the backbuffer to the monitor we "blend" it with the default state which is black, so the presented color is
 
