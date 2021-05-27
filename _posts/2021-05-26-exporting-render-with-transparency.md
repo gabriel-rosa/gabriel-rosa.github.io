@@ -1,5 +1,5 @@
 ---
-published: true
+published: false
 ---
 ## Exporting a render with transparency in a way that supports blending
 
@@ -25,8 +25,11 @@ $$O_0 = \alpha_0 * C_0 + (1 - \alpha_0) * B_r$$
 This result is then placed in the backbuffer. Rendering a second object ($$C_1$$, $$\alpha_1$$) will result in it being blended with the previous result
 
 $$O_1 = \alpha_1 * C_1 + (1- \alpha_1) * O_0$$
+
 $$O_1 = \alpha_1 * C_1 + (1- \alpha_1) * (\alpha_0 * C_0 + (1 - \alpha_0) * B_r)$$
+
 $$O_1 = [\alpha_1 * C_1 + (1- \alpha_1) * (\alpha_0 * C_0)] + [(1- \alpha_1) * (1 - \alpha_0)] * B_r$$
+
 $$O_1 = X_1 + K_1 * B_r$$
 
 ![Multiple layers being blended]({{site.baseurl}}/img/alpha_blending.png)
@@ -44,7 +47,9 @@ Since each rendering assumes the destination color is opaque, every alpha is dis
 In the case of a fully transparent background we have $$B_r = 0$$, so the final color is $$O_n = X_n$$. In order to present the backbuffer to the monitor we "blend" it with the default state which is black, so the presented color is
 
 $$O_r = \alpha_n * O_n$$
+
 $$O_r = \alpha_n * (X_n + K_n * B_r)$$
+
 $$O_r = \alpha_n * X_n$$
 
 Lets get back to the saved image. We now know that the colors that get exported are $$C_i = O_n = X_n$$ with alpha $$a_i = a_n$$, which we can substitute in the equation for the blended image color to get
@@ -54,12 +59,15 @@ $$O_i = a_n * X_n + (1 - a_n) * B_n$$
 As we can see, for any value of $$B_n$$ other than 0 we will have $$O_i != O_r$$. In order to fix this we have to find a different $$C_i$$ and $$a_i$$ such that blending the image with any background color will give the same result as rendering the objects over the same background color. So we begin by setting both background colors to an arbitrary value $$B_n = B_r = B$$. Then we make the image color equal the rendered color
 
 $$O_i = O_r$$
+
 $$a_i * C_i + (1 - \alpha_i) * B = \alpha_n * (X_n + K_n * B)$$
+
 $$C_i = X_n * \frac{\alpha_n}{\alpha_i} + \frac{B}{\alpha_i} * (\alpha_n * K_n + \alpha_i - 1)$$
 
 Since we can't solve the equation with two unknowns ($$C_i$$ and $$\alpha_i$$), we set $$\alph_i$$ in a way that simplifies the equation
 
 $$\alpha_n * K + \alpha_i - 1 = 0$$
+
 $$\alpha_i = 1 - \alpha_n * K$$
 
 so
@@ -71,11 +79,13 @@ $$C_i = X_n * \frac{\alpha_n}{\alpha_i}$$
 And that's it. Instead of writing the color of our rendered buffer directly to disk, we compute $$K$$ and modify the color $$C_i$$ and alpha $$\alpha_i$$ before writing to an image. Now, you might recall that $$K$$ involves the product of a bunch of different alpha values. We could figure out all the alphas involved and carry out the multiplications, or we could use a little trick. If we first render the scene with $$B = 0$$, we get
 
 $$O_{B0} = X_n + K * B$$
+
 $$O_{B0} = X_n$$
 
 If we then render again with $$B = 1$$, we get
 
 $$O_{B1} = X_n + K * B$$
+
 $$O_{B1} = X_n + K$$
 
 meaning we can get the value of $$K$$ by subtracting these two colors
