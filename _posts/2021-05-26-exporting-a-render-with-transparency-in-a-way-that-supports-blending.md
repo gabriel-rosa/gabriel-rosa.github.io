@@ -12,11 +12,11 @@ $$O = \alpha C_s + (1 - \alpha) C_d$$
 ![Alpha blending with the over operator]({{site.baseurl}}/img/over_operator.png)
 
 
-Say our renderer exported an image with color $$C_i$$ and alpha $$\alpha_i$$, if we blend the image with a background layer of color $$B_i$$ the result is
+Now that we know how blending works, lets see how the color of the (incorrectly) blended image is computed. Say our renderer exported an image with color $$C_i$$ and alpha $$\alpha_i$$, if we blend the image with a background layer of color $$B_i$$ the result is
 
 $$O_i = \alpha_i C_i + (1 - \alpha_i) B_i$$
 
-Lets see how our renderer arrives at $$C_i$$ and $$\alpha_i$$. Typically in a scene with overlapping objects with different levels of transparency, objects are rendered back to front and blended with the over operator. So if we have a background of color $$B_r$$ and we render the first transparent object ($$C_0$$, $$\alpha_0$$) over it, the resulting color will be
+Lets leave this result aside for now and see how our renderer arrives at $$C_i$$ and $$\alpha_i$$. Typically in a scene with overlapping objects with different levels of transparency, objects are rendered back to front and blended with the over operator. So if we have a background of color $$B_r$$ and we render the first transparent object ($$C_0$$, $$\alpha_0$$) over it, the resulting color will be
 
 $$O_0 = \alpha_0 C_0 + (1 - \alpha_0) B_r$$
 
@@ -42,7 +42,7 @@ $$K_n = (1 - \alpha_n) (1 - \alpha_{n-1}) ... (1 - \alpha_0)$$
 
 Since each rendering assumes the destination color is opaque, every alpha is discarded but the last one ($$\alpha_n$$), which is written to the backbuffer along with color $$O_n = X_n + K_n * B_r$$. 
 
-In the case of a fully transparent background we have $$B_r = 0$$, so the final color is $$O_n = X_n$$. In order to present the backbuffer to the monitor we "blend" it with the default state which is black, so the presented color is
+In the case we're investigating where the background is fully transparent we have $$B_r = 0$$, so the final color is $$O_n = X_n$$. In order to present the backbuffer to the monitor we "blend" it with the default state which is black, so the presented color is
 
 $$O_r = \alpha_n O_n$$
 
@@ -50,11 +50,11 @@ $$O_r = \alpha_n (X_n + K_n B_r)$$
 
 $$O_r = \alpha_n X_n$$
 
-Lets get back to the saved image. We now know that the colors that get exported are $$C_i = O_n = X_n$$ with alpha $$a_i = a_n$$, which we can substitute in the equation for the blended image color to get
+Lets get back to the saved image. We now know that the colors that get exported are $$C_i = O_n = X_n$$ with alpha $$a_i = a_n$$, which we can substitute in the equation for the blended image color we set aside before to get
 
 $$O_i = a_n X_n + (1 - a_n) B_n$$
 
-As we can see, for any value of $$B_n$$ other than 0 we will have $$O_i != O_r$$. In order to fix this we have to find a different $$C_i$$ and $$a_i$$ such that blending the image with any background color will give the same result as rendering the objects over the same background color. So we begin by setting both background colors to an arbitrary value $$B_n = B_r = B$$. Then we make the image color equal the rendered color
+As we can see, for any value of $$B_n$$ other than $$0$$ we will have $$O_i \neq O_r$$. In order to fix this we have to find a different $$C_i$$ and $$a_i$$ such that blending the image with any color will give the same result as rendering the objects over the same background color. So we begin by setting both background colors to an arbitrary value $$B_n = B_r = B$$. Then we make the image color equal the rendered color
 
 $$O_i = O_r$$
 
