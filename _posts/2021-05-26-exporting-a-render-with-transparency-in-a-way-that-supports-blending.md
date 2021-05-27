@@ -76,13 +76,13 @@ $$C_i = X_n \frac{\alpha_n}{\alpha_i}$$
 
 And that's it. Instead of writing the color of our rendered buffer directly to disk, we compute $$K$$ and modify the color $$C_i$$ and alpha $$\alpha_i$$ before writing to an image. Now, you might recall that $$K$$ involves the product of a bunch of different alpha values. We could figure out all the alphas involved and carry out the multiplications, or we could use a little trick. If we first render the scene with $$B = 0$$, we get
 
-$$O_{B0} = X_n + K B$$
+$$O_{B0} = X_n + K \cancelto{0}{B}$$
 
 $$O_{B0} = X_n$$
 
 If we then render again with $$B = 1$$, we get
 
-$$O_{B1} = X_n + K B$$
+$$O_{B1} = X_n + K \cancelto{1}{B}$$
 
 $$O_{B1} = X_n + K$$
 
