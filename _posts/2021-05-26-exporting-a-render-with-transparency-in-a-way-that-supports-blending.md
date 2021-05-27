@@ -3,18 +3,15 @@ published: true
 ---
 Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with was capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There was an issue with this approach though: if the background was fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes were semi-transparent, the resulting image would not look correct if it was later blended with anything other than a black layer. If we embedded the image in a document with a white background, for instance, the result would look very strange.
 
-
-
 ![Alpha blending with the over operator]({{site.baseurl}}/img/over_operator.png)
 
-### Alpha blending
+#### Alpha blending
 
 To understand and correct this behavior I decided to look at how the colors were produced both for the renderer and for the exported image. First lets remind ourselves how alpha blending works. If we want to blend a transparent color (called the source color) with a background color (called the destination) which is assumed to be opaque, we first define an $$\alpha$$ parameter that determines how transparent the source is ($$\alpha = 0$$ is fully transparent, $$\alpha = 1$$ is fully opaque). Then we use the so called over operator to compute the final image (its a linear interpolation):
 
 $$O = \alpha C_s + (1 - \alpha) C_d$$
 
-
-### Computing the color of the blended image
+#### Computing the color of the blended image
 
 Now that we know how blending works, lets see how the color of the (incorrectly) blended image is computed. Say our renderer exported an image with color $$C_i$$ and alpha $$\alpha_i$$, if we blend the image with a background layer of color $$B_i$$ the result is
 
@@ -22,7 +19,7 @@ $$O_i = \alpha_i C_i + (1 - \alpha_i) B_i$$
 
 ![Incorrectly blended image]({{site.baseurl}}/img/problem.png)
 
-### Computing the color of the render
+#### Computing the color of the render
 
 Lets leave this result aside for now and see how our renderer arrives at $$C_i$$ and $$\alpha_i$$. Typically in a scene with overlapping objects with different levels of transparency, objects are rendered back to front and blended with the over operator. So if we have a background of color $$B_r$$ and we render the first transparent object ($$C_0$$, $$\alpha_0$$) over it, the resulting color will be
 
@@ -46,13 +43,13 @@ where $$X_n$$ is a constant term and
 
 $$K_n = (1 - \alpha_n) (1 - \alpha_{n-1}) ... (1 - \alpha_0)$$
 
-Since each rendering assumes the destination color is opaque, every alpha is discarded but the last one ($$\alpha_n$$), which is written to the backbuffer along with color $$O_n = X_n + K_n B_r$$. 
+Since each rendering assumes the destination color is opaque, every alpha is discarded but the last one ($$\alpha_n$$), which is written to the backbuffer along with color $$O_n$$. 
 
-In the case we're investigating where the background is fully transparent we have $$B_r = 0$$, so the final color is $$O_n = X_n$$. In order to present the backbuffer to the monitor we "blend" it with the default state which is black, so the presented color is
+In the case we're investigating where the background is fully transparent we have $$B_r = 0$$, so the final color is $$O_n  = X_n + K_n \cancelto{0}{B_r} = X_n$$. In order to present the backbuffer to the monitor we "blend" it with the default state which is black, so the presented color is
 
 $$O_r = \alpha_n O_n = \alpha_n X_n$$
 
-### Fixing the issue
+#### Fixing the issue
 
 Lets get back to the saved image. We now know that the colors that get exported are $$C_i = O_n = X_n$$ with alpha $$a_i = a_n$$, which we can substitute in the equation for the blended image color we set aside before to get
 
@@ -96,7 +93,7 @@ $$K = O_{B1} - O_{B0}$$
 
 And now we're done. Rendering the scene twice might be expensive in some cases, but it simplifies things so much that I still chose to go with this solution.
 
-### Step-by-step of the fix
+#### Step-by-step of the fix
 
 To summarize, in order to save an image of a render with transparency in a way that it can still be blended afterwards we do the following:
 
