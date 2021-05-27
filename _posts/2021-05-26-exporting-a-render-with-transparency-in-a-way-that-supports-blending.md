@@ -96,7 +96,7 @@ To summarize, in order to save an image of a render with transparency in a way t
 
 1. Render the scene with a white background to buffer 1
 2. Render the scene with a black background to buffer 2
-3. For each pixel, get the value of $$K$$ by subtracting the color of in buffer 1 from the color in buffer 2
+3. For each pixel, get the value of $$K$$ by subtracting the color in buffer 1 from the color in buffer 2
 4. For each pixel of buffer 1 with alpha $$\alpha$$, calculate a new alpha $$\alpha_i$$ using the formula $$\alpha_i = 1 - \alpha K$$
 5. For each pixel of buffer 1 with color $$C$$, calculate a new color $$C_i$$ using the formula $$C_i = C \frac{\alpha}{\alpha_i}$$
 6. Save $$C_i$$ and $$\alpha_i$$ to disk
