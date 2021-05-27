@@ -40,7 +40,7 @@ $$O_n = X_n + K_n B_r$$
 
 where $$X_n$$ is a constant term and
 
-$$K_n = (1 - \alpha_n) (1 - \alpha_{n-1}) ... (1 - a\alph_0)$$
+$$K_n = (1 - \alpha_n) (1 - \alpha_{n-1}) ... (1 - \alpha_0)$$
 
 Since each rendering assumes the destination color is opaque, every alpha is discarded but the last one ($$\alpha_n$$), which is written to the backbuffer along with color $$O_n = X_n + K_n * B_r$$. 
 
