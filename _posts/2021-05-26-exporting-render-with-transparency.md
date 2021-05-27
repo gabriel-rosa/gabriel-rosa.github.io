@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 ---
 ## Exporting a render with transparency in a way that supports blending
 
