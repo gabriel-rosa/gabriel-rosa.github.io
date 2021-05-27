@@ -1,8 +1,6 @@
 ---
 published: true
 ---
-## Exporting a render with transparency in a way that supports blending
-
 Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with was capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There was an issue with this approach though: if the background was fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes were semi-transparent, the resulting image would not look correct if it was later blended with anything other than a black layer. If we embedded the image in a document with a white background, for instance, the result would look very strange.
 
 ![Incorrectly blended image]({{site.baseurl}}/img/problem.png)
