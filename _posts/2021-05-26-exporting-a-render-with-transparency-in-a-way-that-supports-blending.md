@@ -1,5 +1,5 @@
 ---
-published: true
+published: false
 ---
 Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with is capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There is an issue with this approach though: if the background is fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes are semi-transparent, the resulting image will not look correct if it is later blended with anything other than a black layer. If we embed the image in a document with a white background, for instance, the result will look very strange.
 
