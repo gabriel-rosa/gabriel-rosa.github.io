@@ -1,7 +1,7 @@
 ---
 published: true
 ---
-Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with is capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There is an issue with this approach though: if the background is fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes are semi-transparent, the resulting image will not look correct when blended afterwards. Is there a way to save an image that will still support blending?
+Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with is capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There is an issue with this approach though: if the background is fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes are semi-transparent, the resulting image will not look correct when blended afterwards. Is there a way to save an image that will still support blending? Lets find out.
 
 ![Alpha blending with the over operator]({{site.baseurl}}/img/over_operator.png)
 
@@ -59,9 +59,9 @@ $$C_i =  \frac{X_n}{\alpha_i} + \frac{B}{\alpha_i} (K_n + \alpha_i - 1)$$
 
 Since we can't solve the equation with two unknowns ($$C_i$$ and $$\alpha_i$$), we set $$\alpha_i$$ in a way that simplifies the equation
 
-$$K + \alpha_i - 1 = 0$$
+$$K_n + \alpha_i - 1 = 0$$
 
-$$\alpha_i = 1 - K$$
+$$\alpha_i = 1 - K_n$$
 
 making
 
@@ -71,19 +71,19 @@ $$C_i = \frac{X_n}{\alpha_i}$$
 
 And that's it. Instead of writing the color of our rendered buffer directly to disk, we compute $$K$$ and modify the color $$C_i$$ and alpha $$\alpha_i$$ before writing to an image. Now, you might recall that $$K$$ involves the product of a bunch of different alpha values. We could figure out all the alphas involved and carry out the multiplications, or we could use a little trick. If we first render the scene with $$B = 0$$, we get
 
-$$O_{B0} = X_n + K \cancelto{0}{B}$$
+$$O_{B0} = X_n + K_n \cancelto{0}{B}$$
 
 $$O_{B0} = X_n$$
 
 If we then render again with $$B = 1$$, we get
 
-$$O_{B1} = X_n + K \cancelto{1}{B}$$
+$$O_{B1} = X_n + K_n \cancelto{1}{B}$$
 
-$$O_{B1} = X_n + K$$
+$$O_{B1} = X_n + K_n$$
 
 meaning we can get the value of $$K$$ by subtracting these two colors
 
-$$K = O_{B1} - O_{B0}$$
+$$K_n = O_{B1} - O_{B0}$$
 
 And now we're done. Rendering the scene twice might be expensive in some cases, but it simplifies things so much that I still chose to go with this solution.
 
@@ -93,7 +93,7 @@ To summarize, in order to save an image of a render with transparency in a way t
 
 1. Render the scene with a white background to buffer 1
 2. Render the scene with a black background to buffer 2
-3. For each pixel, get the value of $$K$$ by subtracting the color in buffer 1 from the color in buffer 2
-4. For each pixel, calculate a new alpha $$\alpha_i$$ using the formula $$\alpha_i = 1 - K$$
+3. For each pixel, get the value of $$K_n$$ by subtracting the color in buffer 1 from the color in buffer 2
+4. For each pixel, calculate a new alpha $$\alpha_i$$ using the formula $$\alpha_i = 1 - K_n$$
 5. For each pixel of buffer 1 with color $$C$$, calculate a new color $$C_i$$ using the formula $$C_i = \frac{C}{\alpha_i}$$
 6. Save $$C_i$$ and $$\alpha_i$$ to disk
