@@ -1,7 +1,7 @@
 ---
 published: true
 ---
-Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with is capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There is an issue with this approach though: if the background is fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes are semi-transparent, the resulting image will not look correct when blending afterwards. Is there a way to save the image that will still support blending?
+Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with is capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There is an issue with this approach though: if the background is fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes are semi-transparent, the resulting image will not look correct when blended afterwards. Is there a way to save an image that will still support blending?
 
 ![Alpha blending with the over operator]({{site.baseurl}}/img/over_operator.png)
 
@@ -23,7 +23,7 @@ Since $$C_i$$ is the final color of the rendered image, this equation will produ
 
 #### Computing the color of the rendered scene
 
-Lets take note of this result keep going though. The next step is to see how our renderer arrives at the blended color $$C_i$$. Typically in a scene with overlapping objects with different levels of transparency, objects are rendered back to front and blended with the over operator. So if we have a background of color $$B_r$$ and we render the first transparent object ($$C_0$$, $$\alpha_0$$) over it, the resulting color will be
+Lets take note of this result and see how our renderer arrives at the color $$C_i$$. Typically in a scene with overlapping objects with different levels of transparency, objects are rendered back to front and blended with the over operator. So if we have a background of color $$B_r$$ and we render the first transparent object ($$C_0$$, $$\alpha_0$$) over it, the resulting color will be
 
 $$O_0 = \alpha_0 C_0 + (1 - \alpha_0) B_r$$
 
@@ -45,19 +45,11 @@ where $$X_n$$ is a constant term and
 
 $$K_n = (1 - \alpha_n) (1 - \alpha_{n-1}) ... (1 - \alpha_0)$$
 
-In the case we're investigating where the background is basically black we have $$B_r = 0$$, so the final color is 
-
-$$O_r = O_n  = X_n + K_n \cancelto{0}{B_r} = X_n$$
+The final rendered color is then $$O_r = O_n$$ which gets saved as $$C_i$$.
 
 #### Fixing the issue
 
-Lets get back to the saved image. We now know that the colors that get exported are $$C_i = O_n = X_n$$ with alpha $$a_i$$, which we can substitute in the equation for the blended image color we set aside before to get
-
-$$O_i = a_n X_n + (1 - a_i) B_n$$
-
-What we want to achieve is to have the color of the blended image equal the color of the rendered image for any background $$B$$. So we have to find a different $$C_i$$ and $$a_i$$ such that for any background color $$B = B_n = B_r$$ we'll have
-
-$$O_i = O_r$$
+What we want to achieve is to have the color of the blended image equal final rendered color for any background $$B$$. So we have to find a different $$C_i$$ and $$a_i$$ such that for any background color $$B_n = B_r = B$$ we'll have $$O_i = O_r$$. Substituting for the equations above we get
 
 $$a_i C_i + (1 - \alpha_i) B = X_n + K_n B$$
 
@@ -71,7 +63,7 @@ $$K + \alpha_i - 1 = 0$$
 
 $$\alpha_i = 1 - K$$
 
-so
+making
 
 $$C_i = \frac{X_n}{\alpha_i}$$
 
