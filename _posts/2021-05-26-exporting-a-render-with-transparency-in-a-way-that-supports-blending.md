@@ -69,7 +69,7 @@ $$C_i = \frac{X_n}{\alpha_i}$$
 
 ![Correctly blended image]({{site.baseurl}}/img/fixed.png)
 
-And that's it. Instead of writing the color of our rendered buffer directly to disk, we compute $$K$$ and modify the color $$C_i$$ and alpha $$\alpha_i$$ before writing to an image. Now, you might recall that $$K$$ involves the product of a bunch of different alpha values. We could figure out all the alphas involved and carry out the multiplications, or we could use a little trick. If we first render the scene with $$B = 0$$, we get
+And that's it. Instead of writing the color of our rendered buffer directly to disk, we compute $$K_n$$ and modify the color $$C_i$$ and alpha $$\alpha_i$$ before writing to an image. Now, you might recall that $$K_n$$ involves the product of a bunch of different alpha values. We could figure out all the alphas involved and carry out the multiplications, or we could use a little trick. If we first render the scene with $$B = 0$$, we get
 
 $$O_{B0} = X_n + K_n \cancelto{0}{B}$$
 
