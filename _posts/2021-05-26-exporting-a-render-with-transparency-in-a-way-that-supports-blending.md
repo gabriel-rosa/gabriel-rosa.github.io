@@ -1,13 +1,13 @@
 ---
 published: true
 ---
-Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with is capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There is an issue with this approach though: if the background is fully transparent (black background with $$\alpha = 0$$) and some of the rendered meshes are semi-transparent, the resulting image will not look correct when blended afterwards. Is there a way to save an image that will still support blending? Lets find out.
+Recently I ran into an interesting issue at work which led to a pretty neat solution. The renderer I was working with is capable of exporting the contents of the viewport to an image by rendering them to a buffer and saving the resulting color and alpha to disk. There is an issue with this approach though: if both the background and some of the rendered meshes are transparent, the resulting image will not look correct when blended afterwards. Is there a way to save an image that will still support blending? Lets find out.
 
 ![Alpha blending with the over operator]({{site.baseurl}}/img/over_operator.png)
 
 #### Alpha blending
 
-To understand and correct this behavior I decided to look at how the colors were produced both for the renderer and for the exported image. First lets remind ourselves how alpha blending works. If we want to blend a transparent color (called the source color) with a background color (called the destination), we first define an $$\alpha$$ parameter that determines how transparent the source is ($$\alpha = 0$$ is fully transparent, $$\alpha = 1$$ is fully opaque). Then we use the so called over operator to compute the final color (basically a linear interpolation):
+To understand this behavior I decided to look at how the colors were produced both for the renderer and for the exported image. First lets remind ourselves how alpha blending works. If we want to blend a transparent color (called the source color) with a background color (called the destination), we first define an $$\alpha$$ parameter that determines how transparent the source is ($$\alpha = 0$$ is fully transparent, $$\alpha = 1$$ is fully opaque). Then we use the so called over operator to compute the final color (basically a linear interpolation):
 
 $$O = \alpha C_s + (1 - \alpha) C_d$$
 
@@ -49,7 +49,7 @@ The final rendered color is then $$O_r = O_n$$ which gets saved as $$C_i$$.
 
 #### Fixing the issue
 
-What we want to achieve is to have the color of the blended image equal final rendered color for any background $$B$$. So we have to find a different $$C_i$$ and $$a_i$$ such that for any background color $$B_n = B_r = B$$ we'll have $$O_i = O_r$$. Substituting for the equations above we get
+What we want to achieve is for the color of the blended image equal to be equal to the final rendered color for any background $$B$$. So we have to find a different $$C_i$$ and $$a_i$$ such that for any background color $$B_n = B_r = B$$ we'll have $$O_i = O_r$$. Substituting for the equations above we get
 
 $$a_i C_i + (1 - \alpha_i) B = X_n + K_n B$$
 
@@ -81,7 +81,7 @@ $$O_{B1} = X_n + K_n \cancelto{1}{B}$$
 
 $$O_{B1} = X_n + K_n$$
 
-meaning we can get the value of $$K$$ by subtracting these two colors
+meaning we can get the value of $$K_n$$ by subtracting these two colors
 
 $$K_n = O_{B1} - O_{B0}$$
 
@@ -95,5 +95,5 @@ To summarize, in order to save an image of a render with transparency in a way t
 2. Render the scene with a black background to buffer 2
 3. For each pixel, get the value of $$K_n$$ by subtracting the color in buffer 1 from the color in buffer 2
 4. For each pixel, calculate a new alpha $$\alpha_i$$ using the formula $$\alpha_i = 1 - K_n$$
-5. For each pixel of buffer 1 with color $$C$$, calculate a new color $$C_i$$ using the formula $$C_i = \frac{C}{\alpha_i}$$
+5. For each pixel of buffer 2 with color $$C = X_n$$, calculate a new color $$C_i$$ using the formula $$C_i = \frac{C}{\alpha_i}$$
 6. Save $$C_i$$ and $$\alpha_i$$ to disk
